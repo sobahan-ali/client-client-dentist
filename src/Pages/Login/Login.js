@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider';
 
 const Login = () => {
+    const {signIn} = useContext(AuthContext)
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const handleLogIn = (data) => {
+    const [logInError, setLogInError] = useState('');
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const from = location.state?.from?.pathname || '/';
+
+
+
+    const handleLogIn = (data, e) => {
+    
+        const form = e.target;
+        setLogInError('')
         console.log(data)
+        signIn(data.email, data.password)
+        .then(result => {
+            const user = result.user;
+            navigate(from, {replace: true});
+            console.log(user);
+            form.reset();
+        })
+        .catch(error => {
+            console.error(error.message)
+            setLogInError(error.message)
+        })
+
     }
     return (
         <div className=' flex justify-center items-center'>
@@ -43,7 +69,7 @@ const Login = () => {
                         </label>
                     </div>
                     <input className='btn btn-accent w-full' value='Log in' type="submit" />
-
+                        {logInError && <p className='text-red-600 text-center'>{logInError}</p>}
                 </form>
                 <p className='text-center'><small>new to doctor portal? <Link to='/signup' className='text-primary'>create new account</Link></small></p>
                 <div className="divider">OR</div>

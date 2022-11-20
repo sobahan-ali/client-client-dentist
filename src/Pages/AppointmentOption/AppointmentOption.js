@@ -6,7 +6,7 @@ const AppointmentOption = ({ selectedDate }) => {
     const [dentalOption, setDentalOption] = useState([])
     const [treatment, setTreatment] = useState(null)
     useEffect(() => {
-        fetch('services.json')
+        fetch('http://localhost:5000/appointmentOptions')
             .then(res => res.json())
             .then(data => setDentalOption(data))
     }, [])
@@ -14,7 +14,7 @@ const AppointmentOption = ({ selectedDate }) => {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10'>
             {
                 dentalOption.map(option => <Option
-                    key={option._id}
+                    key={option._id}Option
                     option={option}
                     setTreatment={setTreatment}
                 ></Option>)
@@ -22,7 +22,7 @@ const AppointmentOption = ({ selectedDate }) => {
             {treatment && <BookingModal
                 selectedDate={selectedDate}
                 treatment={treatment}
-                setTreatment = {setTreatment}
+                setTreatment={setTreatment}
 
             ></BookingModal>}
         </div>
